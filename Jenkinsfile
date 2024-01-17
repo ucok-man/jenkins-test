@@ -9,7 +9,7 @@ pipeline {
         stage('Build & Dockerize'){
             steps {
                 script{
-                    docker.build("jenkins-test")
+                    docker.build("jumatberkah/jenkins-test")
                 }
             }
         }
@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('https://registry.hub.docker.com', '94e58d8b-6783-4262-b1a0-96250f45f61c') {
-                        docker.image("jenkins-test").push()
+                        docker.image("jumatberkah/jenkins-test").push()
                     }
                 }
             }
