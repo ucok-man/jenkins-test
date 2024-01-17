@@ -1,38 +1,43 @@
 pipeline {
     agent any
     environment {
-        // Definisi variabel lingkungan yang diperlukan
-        DOCKER_REGISTRY_CREDENTIALS = '94e58d8b-6783-4262-b1a0-96250f45f61c'
-        DOCKER_IMAGE_NAME = 'jumatberkah/jenkins-test'
+        // Ganti dengan informasi credential Docker Anda
+        DOCKER_CREDENTIAL_ID = 'your-docker-credential-id'
     }
     stages {
-        stage('Checkout'){
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build'){
+        stage('Build & Dockerize') {
             steps {
                 script {
-                    // Ganti perintah ini sesuai dengan perintah yang diperlukan untuk membangun aplikasi Go Anda
-                    sh 'go build -o myapp'
+                    // Ganti 'jumatberkah/jenkins-test' dengan nama image yang Anda inginkan
+                    def imageName = 'jumatberkah/jenkins-test'
+
+                    // Build Docker image
+                    def dockerImage = docker.build(imageName)
+
+                    // Ganti 'main' dengan nama executable yang dihasilkan oleh build Go Anda
+                    dockerImage.inside('-v $PWD:/app') {
+                        sh 'go build -o main .'
+                    }
+
+                    // Simpan Docker image yang telah dibuat
+                    dockerImage.save("build.tar")
                 }
             }
         }
-        stage('Dockerize'){
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Ganti perintah ini sesuai dengan perintah yang diperlukan untuk membuat Docker image
-                    sh 'docker build -t $DOCKER_IMAGE_NAME .'
-                }
-            }
-        }
-        stage('Push to Docker Hub'){
-            steps {
-                script {
-                    // Push Docker image ke Docker Hub
-                    docker.withRegistry('', DOCKER_REGISTRY_CREDENTIALS) {
-                        docker.image(DOCKER_IMAGE_NAME).push()
+                    // Load Docker image yang telah dibuat sebelumnya
+                    def dockerImage = docker.load("build.tar")
+
+                    // Push Docker image ke registry
+                    docker.withRegistry('', DOCKER_CREDENTIAL_ID) {
+                        dockerImage.push()
                     }
                 }
             }
