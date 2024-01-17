@@ -1,11 +1,14 @@
-FROM golang:1.21
+FROM golang:1.21.6
 
 WORKDIR /app
 
-COPY main.go .
+COPY go.mod ./
+RUN go mod download
 
-EXPOSE 8080
+COPY . .
 
 RUN go build -o main .
+
+EXPOSE 8080
 
 CMD ["./main"]
