@@ -10,7 +10,7 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                sh(script: 'docker image build -t jenkins-test')
+                sh(script: 'docker image build -t jenkins-test .')
             }
         }
     }
