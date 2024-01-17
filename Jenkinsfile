@@ -15,9 +15,9 @@ pipeline {
         stage('push image to dockerhub') {
             steps {
                 script{
-                    'docker login -u jumatberkah -p ucok27101998'
-                    'docker tag jenkins-test jumatberkah/jenkins-test'
-                    'docker push jumatberkah/jenkins-test'
+                   bat 'docker login -u jumatberkah -p ucok27101998'
+                   bat 'docker tag jenkins-test jumatberkah/jenkins-test'
+                   bat 'docker push jumatberkah/jenkins-test'
                 }
             }
         }
