@@ -37,7 +37,7 @@ pipeline {
                 script {
                     docker.withRegistry('', 'docker-auth') {
                         def appimg =  docker.build('jumatberkah/jenkins-test')
-                        appimg.push()
+                        appimg.push('--password-stdin')
                     }
                 }
             }
