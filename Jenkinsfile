@@ -2,6 +2,7 @@
 pipeline {
     agent any
 
+    /* groovylint-disable-next-line VariableTypeRequired */
     def appImage
 
     stages {
