@@ -35,9 +35,9 @@ pipeline {
         stage('Docker Push') {
             steps {
                 script {
-                    docker.withRegistry('', 'docker-auth') {
-                        def appimg =  docker.build('jumatberkah/jenkins-test')
-                        appimg.push('--password-stdin')
+                    def appImage = docker.build('jumatberkah/jenkins-test')
+                    withCredentials([usernamePassword(credentialsId: 'docker-auth', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        appImage.push('--password-stdin')
                     }
                 }
             }
