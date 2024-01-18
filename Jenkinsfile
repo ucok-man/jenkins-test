@@ -1,7 +1,7 @@
 /* groovylint-disable CompileStatic */
 pipeline {
     agent any
-
+    appImage = ''
     stages {
         stage('Verify Branch') {
             steps {
@@ -10,12 +10,12 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                sh(script: 'docker image build -t jenkins-test .')
+                appImage = docker.build('jumatberkah/jenkins-test')
             }
         }
         stage('Start App') {
             steps {
-                sh(script: 'docker run --name jenkins-test --publish 8081:8081 --detach jenkins-test')
+                sh(script: 'docker run --name jenkins-test --publish 8081:8081 --detach jumatberkah/jenkins-test')
             }
         }
         stage('Run Tests') {
@@ -29,6 +29,11 @@ pipeline {
                 failure {
                     echo('Test failed :)')
                 }
+            }
+        }
+        stage('Docker Push') {
+            docker.withRegistry('', 'docker-auth') {
+                appImage.push()
             }
         }
     }
