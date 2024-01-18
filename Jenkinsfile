@@ -36,8 +36,9 @@ pipeline {
             steps {
                 script {
                     def appImage = docker.build('jumatberkah/jenkins-test')
-                    withCredentials([usernamePassword(credentialsId: 'docker-auth', passwordVariable: 'dckr_pat_vTkKr9FmY3VRHIAWNMGTAUGlQdI', usernameVariable: 'jumatberkah')]) {
-                        appImage.push('latest')
+                    withCredentials([usernamePassword(credentialsId: 'docker-auth', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
+                        appImage.push('latest   ')
                     }
                 }
             }
