@@ -9,7 +9,9 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                docker.build('jumatberkah/jenkins-test')
+                script {
+                    docker.build('jumatberkah/jenkins-test')
+                }
             }
         }
         stage('Start App') {
@@ -31,9 +33,11 @@ pipeline {
             }
         }
         stage('Docker Push') {
-            docker.withRegistry('', 'docker-auth') {
-                def appimg =  docker.build('jumatberkah/jenkins-test')
-                appimg.push()
+            script {
+                docker.withRegistry('', 'docker-auth') {
+                    def appimg =  docker.build('jumatberkah/jenkins-test')
+                    appimg.push()
+                }
             }
         }
     }
