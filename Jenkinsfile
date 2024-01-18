@@ -1,7 +1,9 @@
 /* groovylint-disable CompileStatic */
 pipeline {
     agent any
-    appImage = ''
+
+    def appImage
+
     stages {
         stage('Verify Branch') {
             steps {
