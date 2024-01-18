@@ -10,13 +10,13 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    docker.build('jenkins-test')
+                    docker.build('jumatberkah/jenkins-test')
                 }
             }
         }
         stage('Start App') {
             steps {
-                sh(script: 'docker run --name jenkins-test --publish 8081:8081 --detach jenkins-test')
+                sh(script: 'docker run --name jenkins-test --publish 8081:8081 --detach jumatberkah/jenkins-test')
             }
         }
         stage('Run Tests') {
@@ -45,7 +45,7 @@ pipeline {
     }
     post {
         always {
-            sh(script: 'docker container stop jenkins-test')
+            sh(script: 'docker container rm -f -v jenkins-test')
         }
     }
 }
